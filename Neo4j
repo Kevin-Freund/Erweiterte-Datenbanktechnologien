@@ -35,12 +35,36 @@ MATCH (p1:Person)-[:FOLLOWS]->(p2:Person)
 RETURN p1.name,p2.name
 
 3.2
-
+MATCH (p:Person{name:'Clint Eastwood'})-[*..4]-(n) 
+RETURN (n)
 
 3.3
+MATCH (p:Person{name:'Clint Eastwood'})-[*..4]-(n) 
+RETURN COUNT(DISTINCT n)
 
+4.1
+MATCH (people:Person)-[ACTED_IN]-(m:Movie {title: "Apollo 13"}) 
+RETURN m.title,avg(m.released-people.born)
 
+4.2
+MATCH (people:Person)-[ACTED_IN]-(m:Movie)
+RETURN m.title,avg(m.released-people.born)
+ORDER BY avg(m.released-people.born) DESC LIMIT 10
 
+4.3
+MATCH (p:Person)-[ACTED_IN]-(m:Movie)
+WITH m,avg(m.released-p.born) as age ORDER BY age ASC LIMIT 1
+MATCH (m)<-[ACTED_IN]-(p2)
+RETURN m,p2
+
+4.4 (hier fehlt noch Differenzbildung)
+MATCH (people:Person)-[ACTED_IN]-(m:Movie)
+RETURN m.title,(avg(m.released-people.born)) as age
+ORDER BY avg(m.released-people.born) ASC LIMIT 1
+UNION
+MATCH (people:Person)-[ACTED_IN]-(m:Movie)
+RETURN m.title, (avg(m.released-people.born)) as age
+ORDER BY avg(m.released-people.born) DESC LIMIT 1
 
 
 Basis
