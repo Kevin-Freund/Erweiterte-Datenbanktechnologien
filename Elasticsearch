@@ -1,0 +1,159 @@
+1.1
+PUT movies
+{
+  "settings": {
+    "index": {
+      "number_of_shards": 1,
+      "number_of_replicas": 0
+    }
+  }
+}
+
+1.2
+POST movies/_doc
+{ 
+"id" : "79132",
+"title" : "Inception",
+"year" : 2010,
+"genre" : ["Action","Crime","Drama","Mystery","Sci-Fi","Thriller","IMAX"] 
+}
+
+POST movies/_doc
+{ 
+"id" : "109487",
+"title" : "Interstellar",
+"year" : 2014,
+"genre" : ["Sci-Fi","IMAX"] 
+}
+
+POST movies/_doc
+{ 
+"id" : "16",
+"title" : "Casino",
+"year" : 1995,
+"genre" : ["Crime","Drama"] 
+}
+
+1.3
+GET movies/_search
+{ 
+  "query": {
+    "match_all": {}
+  }
+}
+
+1.4
+POST movies/_delete_by_query
+{
+  "query": {
+    "match": {
+      "title": "Inception"
+    }
+  }
+}
+
+DELETE /movies
+
+
+2.1.GET movies/_count
+{
+  "query": {
+    "match": {
+      "genre": "Sci-Fi"
+    }
+  }
+}
+
+Sci-Fi: 980
+
+2.2
+GET movies/_search
+{
+"query": {
+  "match_phrase": {
+    "genre": "Sci-Fi"
+    }
+  },
+    "aggs" : {
+      "avg_year" : { "avg" : { "field" : "year" } }
+  }
+}
+
+Sci-Fi: 1996.5663265306123
+
+GET movies/_search
+{
+"query": {
+  "match_phrase": {
+    "genre": "Drama"
+    }
+  },
+    "aggs" : {
+      "avg_year" : { "avg" : { "field" : "year" } }
+  }
+}
+
+Drana: 1993.6950240770466
+
+2.3
+GET /movies/_search {
+  "query": {
+    "multi_match": {
+      "query": "drama",
+        "fields": ["title", "genre"]
+    }
+  }
+}
+
+Anzahl: 6.122918
+
+
+2.4
+folgt noch
+
+
+3.
+GET movies/_search
+{
+"query": {
+  "fuzzy": {
+    "title": "Intersteller"
+    }
+  }
+}
+
+4.1
+GET /movies/_search
+{
+"query": {
+  "match_phrase": {
+    "title": "Planet Apes"
+    }
+  }
+} 
+
+4.1
+GET /movies/_search
+{
+"query": {
+  "match_phrase": {
+    "title": "Planet Apes"
+    }
+  }
+} 
+
+4.2
+GET /movies/_search
+{
+"query": {
+    "match_phrase": {
+      "title": {
+        "query": "Planet Apes",
+        "slop" : 2
+      }
+    }
+  }
+} 
+
+4.3
+
